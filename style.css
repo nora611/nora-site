@@ -59,32 +59,62 @@ p { margin: 10px 0; }
   color: var(--text);
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+/* Header layout: put title on left and toggle on the right */
+.header .name { margin: 0 0 4px; font-size: 28px; font-weight: 700; }
+.header .tagline { margin: 0; color: var(--muted); }
+
+/* New: flex row container for the header */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.theme-toggle:hover {
+/* Optional: keep title group from shrinking on small screens */
+.title-group {
+  min-width: 0;
+}
+
+/* Replace old #theme-toggle text button with icon button */
+#theme-toggle.theme-toggle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);            /* use foreground color */
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+#theme-toggle.theme-toggle:hover {
   background: rgba(127,127,127,0.08);
 }
 
-.theme-toggle:active {
+#theme-toggle.theme-toggle:active {
   transform: scale(0.98);
 }
 
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--accent);
+#theme-toggle.theme-toggle:focus-visible {
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 
 /* Icon: CSS-only sun/moon */
-.theme-toggle .icon {
+#theme-toggle .icon {
   width: 22px;
   height: 22px;
   display: inline-block;
   position: relative;
 }
 
-/* Sun (default) */
-.theme-toggle .icon::before,
-.theme-toggle .icon::after {
+/* Base pseudo elements */
+#theme-toggle .icon::before,
+#theme-toggle .icon::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -92,8 +122,8 @@ p { margin: 10px 0; }
   border-radius: 50%;
 }
 
-/* Sun core */
-.theme-toggle .icon::before {
+/* Sun core + rays (light mode) */
+#theme-toggle .icon::before {
   width: 14px;
   height: 14px;
   background: currentColor;
@@ -109,30 +139,34 @@ p { margin: 10px 0; }
   transition: transform 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
 }
 
-/* Moon mask uses mix-blend and translate to create crescent */
-.theme-toggle .icon::after {
+/* Moon mask uses background to carve crescent */
+#theme-toggle .icon::after {
   width: 14px;
   height: 14px;
   background: var(--bg);
   transform: translate(6px, -6px) scale(0); /* hidden in light */
-  border-radius: 50%;
   transition: transform 0.35s ease;
   mix-blend-mode: multiply;
 }
 
-/* Dark mode: morph into moon */
-:root.dark .theme-toggle .icon::before,
-@media (prefers-color-scheme: dark) {
-  :root:not(.light):not(.dark) .theme-toggle .icon::before {
-    transform: scale(1); /* keep size */
-    /* Remove rays for moon by making them tiny via negative spread and transparent bg illusion */
-    box-shadow: none;
+/* Dark mode: remove rays, reveal crescent */
+html[data-theme="dark"] #theme-toggle .icon::before {
+  box-shadow: none;
+}
+
+html[data-theme="dark"] #theme-toggle .icon::after {
+  transform: translate(3px, -3px) scale(1);
+}
+
+/* Small screens: slightly smaller hit area (optional) */
+@media (max-width: 600px) {
+  #theme-toggle.theme-toggle {
+    width: 36px;
+    height: 36px;
+  }
+  #theme-toggle .icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
-:root.dark .theme-toggle .icon::after,
-@media (prefers-color-scheme: dark) {
-  :root:not(.light):not(.dark) .theme-toggle .icon::after {
-    transform: translate(3px, -3px) scale(1); /* reveal crescent */
-  }
-}
