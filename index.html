@@ -25,20 +25,18 @@
   function currentTheme() {
     return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
   }
-
-  function setTheme(next) {
-    if (next === "dark") {
-      root.setAttribute("data-theme", "dark");
-    } else {
-      root.removeAttribute("data-theme");
+  
+  function updateToggleIcon(theme) {
+      const img = document.getElementById("theme-icon");
+      if (!img) return;
+      if (theme === "dark") {
+        img.src = "moon.png";
+        img.alt = "Moon icon";
+      } else {
+        img.src = "sun.png";
+        img.alt = "Sun icon";
+      }
     }
-    try { localStorage.setItem(storageKey, next); } catch {}
-    const btn = document.getElementById("theme-toggle");
-    if (btn) {
-      btn.setAttribute("aria-label", next === "dark" ? "Switch to light mode" : "Switch to dark mode");
-      btn.title = next === "dark" ? "Light mode" : "Dark mode";
-    }
-  }
 
   // Wire up button
   function ready(fn) {
