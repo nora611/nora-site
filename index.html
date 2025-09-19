@@ -6,6 +6,70 @@
     <title>Nora R.</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
+  <script>
+(function () {
+  const storageKey = "theme"; // "light" | "dark"
+  const root = document.documentElement;
+
+  // Determine initial theme
+  const stored = localStorage.getItem(storageKey);
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const initial = stored || (prefersDark ? "dark" : "light");
+  if (initial === "dark") {
+    root.setAttribute("data-theme", "dark");
+  } else {
+    root.removeAttribute("data-theme");
+  }
+
+  function currentTheme() {
+    return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+
+  function setTheme(next) {
+    if (next === "dark") {
+      root.setAttribute("data-theme", "dark");
+    } else {
+      root.removeAttribute("data-theme");
+    }
+    try { localStorage.setItem(storageKey, next); } catch {}
+    const btn = document.getElementById("theme-toggle");
+    if (btn) {
+      btn.setAttribute("aria-label", next === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      btn.title = next === "dark" ? "Light mode" : "Dark mode";
+    }
+  }
+
+  // Wire up button
+  function ready(fn) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn, { once: true });
+    } else {
+      fn();
+    }
+  }
+
+  ready(() => {
+    const btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    // Set initial labels
+    btn.setAttribute("aria-label", currentTheme() === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    btn.title = currentTheme() === "dark" ? "Light mode" : "Dark mode";
+
+    btn.addEventListener("click", () => {
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      setTheme(next);
+    });
+  });
+
+  // If user hasn't chosen, follow system changes live
+  if (!stored && window.matchMedia) {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener?.("change", (e) => setTheme(e.matches ? "dark" : "light"));
+  }
+})();
+</script>
+  
   <body>
     <main class="wrap">
       <header class="header">
@@ -22,8 +86,9 @@
         <p class="subtitle">
           Hello!
         </p>
-        <button id="theme-toggle" aria-label="Toggle theme">Light mode</button>
-
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+      <span class="icon" aria-hidden="true"></span>
+    </button>
       </header>
 
       <section class="block">
