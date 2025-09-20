@@ -1,11 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Nora R.</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- Preload icons for instant toggle -->
+    <link rel="preload" as="image" href="moon.jpg" />
+    <link rel="preload" as="image" href="sun.jpg" />
+    <!-- Preload avatar for faster LCP -->
     <link rel="preload" as="image" href="avatar.JPG" fetchpriority="high" />
+    <script>
+      // Apply theme ASAP to avoid flash
+      (function () {
+        const storageKey = "preferred-color-scheme";
+        const stored = localStorage.getItem(storageKey);
+        const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored || (systemDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
 
   <body>
@@ -15,9 +29,11 @@
           id="theme-toggle"
           class="theme-toggle"
           type="button"
-          aria-label="Toggle theme"
-          title="Toggle theme"
-        ></button>
+          aria-label="Switch to dark mode"
+          title="Switch to dark mode"
+        >
+          <img id="theme-icon" src="moon.jpg" alt="" width="20" height="20" decoding="async" />
+        </button>
       </header>
 
       <section class="hero">
@@ -63,8 +79,7 @@
         <details>
           <summary>Previously</summary>
           <p>
-            At University:
-            <a href="https://hillhousefellows.com/about" target="_blank" rel="noopener">Hillhouse Fellowship</a>
+            At University: <a href="https://hillhousefellows.com/about" target="_blank" rel="noopener">Hillhouse Fellowship</a>
             • Yale Daily News • Yale Entrepreneurial Society
           </p>
           <p>
@@ -92,12 +107,4 @@
           <summary>Contact</summary>
           <p>
             <a href="mailto:noraransi10@gmail.com">noraransi10@gmail.com</a>
-            · <a href="https://www.linkedin.com/in/noraransi/">LinkedIn</a>
-          </p>
-        </details>
-      </section>
-    </main>
-
-    <script>
-      (function () {
-        const storageKey = "preferred-color-scheme
+            · <a href="https://www.linkedin.com/in/noraransi/">LinkedIn
