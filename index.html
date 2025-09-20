@@ -10,16 +10,6 @@
     <link rel="preload" as="image" href="sun.jpg" />
     <!-- Preload avatar for faster LCP -->
     <link rel="preload" as="image" href="avatar.JPG" fetchpriority="high" />
-    <script>
-      // Apply theme ASAP to avoid flash
-      (function () {
-        const storageKey = "preferred-color-scheme";
-        const stored = localStorage.getItem(storageKey);
-        const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = stored || (systemDark ? "dark" : "light");
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
   </head>
 
   <body>
