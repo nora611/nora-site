@@ -1,149 +1,176 @@
-/* style.css */
 :root {
   --bg: #ffffff;
-  --fg: #0b0b0c;
-  --muted: #5b5b5f;
-  --link: #0d5fff;
-  --border: #e9e9ee;
-}
-[data-theme="dark"] {
-  --bg: #0f1115;
-  --fg: #e8e8ee;
-  --muted: #a1a1aa;
-  --link: #72a0ff;
-  --border: #23252b;
+  --text: #0a0a0a;
+  --subtext: #555;
+  --link: #1a73e8;
+  --border: #e6e6e6;
+  --card: #fafafa;
+  --shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
 }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+:root[data-theme="dark"] {
+  --bg: #0c0d0e;
+  --text: #e8e8e8;
+  --subtext: #a8a8a8;
+  --link: #8ab4f8;
+  --border: #26282b;
+  --card: #121315;
+  --shadow: 0 1px 2px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
 body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   background: var(--bg);
-  color: var(--fg);
-  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.wrap { max-width: 680px; margin: 48px auto; padding: 0 16px; }
-
-/* Header layout: avatar + name/subtitle on left, toggle on right */
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
 }
 
-.title-group {
+.header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-width: 0;
+  justify-content: flex-end;
+  position: sticky;
+  top: 0;
+  background: color-mix(in oklab, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.2) blur(4px);
+  border-bottom: 1px solid var(--border);
+  height: 54px;
+  padding: 0 8px;
+  z-index: 10;
+}
+
+/* Theme toggle button:
+   - Shows moon icon when in LIGHT mode
+   - Shows sun icon when in DARK mode */
+.theme-toggle {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
+}
+
+.theme-toggle:active {
+  transform: scale(0.98);
+}
+
+/* Icon via mask to avoid text; accessible label handled via aria-label */
+.theme-toggle::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  /* Default (light mode): moon icon */
+  -webkit-mask-image: radial-gradient(circle at 35% 35%, transparent 7px, black 8px),
+                      radial-gradient(circle at 60% 60%, black 10px, black 10px);
+  -webkit-mask-composite: source-over;
+  mask-image: radial-gradient(circle at 35% 35%, transparent 7px, black 8px),
+              radial-gradient(circle at 60% 60%, black 10px, black 10px);
+  mask-composite: add;
+}
+
+/* Dark mode shows SUN icon */
+:root[data-theme="dark"] .theme-toggle::before {
+  /* Sun: circle + rays */
+  -webkit-mask-image:
+    radial-gradient(circle, black 9px, transparent 10px),
+    conic-gradient(from 0deg, black 0 10deg, transparent 10deg 20deg) 50% 50% / 20px 20px;
+  -webkit-mask-composite: source-over;
+  mask-image:
+    radial-gradient(circle, black 9px, transparent 10px),
+    conic-gradient(from 0deg, black 0 10deg, transparent 10deg 20deg) 50% 50% / 20px 20px;
+  mask-composite: add;
+}
+
+/* Hero section with image above name */
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 28px 0 8px;
 }
 
 .site-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex: 0 0 auto;
-}
-
-.title-texts {
-  min-width: 0;
-}
-
-.header .name { margin: 0 0 4px; font-size: 28px; font-weight: 700; }
-.header .tagline { margin: 0; color: var(--muted); }
-.subtitle { margin: 4px 0 0; color: var(--muted); }
-
-.block { border-top: 1px solid var(--border); padding: 14px 0; }
-summary { list-style: none; cursor: pointer; font-weight: 600; }
-summary::-webkit-details-marker { display: none; }
-details > summary { padding: 6px 0; }
-details[open] > summary { color: var(--muted); }
-
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-p { margin: 10px 0; }
-
-/* Theme toggle button (CSS-only icon; no image swapping = no flash) */
-.theme-toggle {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--fg);
-  cursor: pointer;
-  transition: background 0.12s ease, border-color 0.12s ease, transform 0.05s ease;
-}
-.theme-toggle:hover { background: rgba(127,127,127,0.08); }
-.theme-toggle:active { transform: scale(0.98); }
-.theme-toggle:focus { outline: none; }
-.theme-toggle:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-
-/* Icon: sun/moon drawn in CSS to avoid asset flicker */
-#theme-toggle .icon {
-  width: 22px;
-  height: 22px;
-  display: inline-block;
-  position: relative;
-}
-
-/* Base pseudo elements */
-#theme-toggle .icon::before,
-#theme-toggle .icon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
+  width: 192px;
+  height: 192px;
   border-radius: 50%;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  background: var(--card);
 }
 
-/* Sun core + rays (light mode) */
-#theme-toggle .icon::before {
-  width: 14px;
-  height: 14px;
-  background: currentColor;
-  box-shadow:
-    0 -11px 0 -8px currentColor,
-    0 11px 0 -8px currentColor,
-    11px 0 0 -8px currentColor,
-    -11px 0 0 -8px currentColor,
-    8px 8px 0 -8px currentColor,
-    -8px 8px 0 -8px currentColor,
-    8px -8px 0 -8px currentColor,
-    -8px -8px 0 -8px currentColor;
-  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+.name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 8px 0 0;
+  text-align: center;
 }
 
-/* Moon mask uses background to carve crescent */
-#theme-toggle .icon::after {
-  width: 14px;
-  height: 14px;
-  background: var(--bg);
-  transform: translate(6px, -6px) scale(0); /* hidden in light */
-  transition: transform 0.25s ease;
-  mix-blend-mode: multiply;
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--subtext);
+  text-align: center;
 }
 
-/* Dark mode: remove rays, reveal crescent */
-html[data-theme="dark"] #theme-toggle .icon::before {
-  box-shadow: none;
-}
-html[data-theme="dark"] #theme-toggle .icon::after {
-  transform: translate(3px, -3px) scale(1);
+/* Content blocks */
+.block {
+  margin: 16px 0;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
 
-/* Small screens tweaks */
-@media (max-width: 600px) {
-  .site-avatar { width: 56px; height: 56px; }
-  .header .name { font-size: 24px; }
-  .theme-toggle { width: 36px; height: 36px; }
-  #theme-toggle .icon { width: 20px; height: 20px; }
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Respect user “prefers-reduced-motion” */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .site-avatar {
+    transition: none;
+  }
 }
