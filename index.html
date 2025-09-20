@@ -21,7 +21,7 @@
           aria-label="Switch to dark mode"
           title="Switch to dark mode"
         >
-          <img id="theme-icon" src="sun.png" alt="Sun icon" width="20" height="20" decoding="async" />
+          <img id="theme-icon" src="moon.png" alt="Moon icon" width="20" height="20" decoding="async" />
         </button>
       </header>
 
@@ -115,11 +115,11 @@
           const img = document.getElementById("theme-icon");
           if (!img) return;
           if (theme === "dark") {
-            img.src = "moon.png";
-            img.alt = "Moon icon";
+          img.src = "sun.png";
+          img.alt = "Sun icon";
           } else {
-            img.src = "sun.png";
-            img.alt = "Sun icon";
+          img.src = "moon.png";
+          img.alt = "Moon icon";
           }
         }
 
