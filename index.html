@@ -1,14 +1,13 @@
+<!-- index.html -->
 <!doctype html>
-<html lang="en" data-theme="">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Nora R.</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Preload icons for instant toggle -->
     <link rel="preload" as="image" href="moon.png" />
     <link rel="preload" as="image" href="sun.png" />
-    <!-- Preload avatar for faster LCP -->
     <link rel="preload" as="image" href="avatar.JPG" fetchpriority="high" />
   </head>
 
@@ -22,7 +21,7 @@
           aria-label="Switch to dark mode"
           title="Switch to dark mode"
         >
-          <img id="theme-icon" src="moon.jpg" alt="" width="20" height="20" decoding="async" />
+          <img id="theme-icon" src="sun.png" alt="Sun icon" width="20" height="20" decoding="async" />
         </button>
       </header>
 
@@ -97,4 +96,97 @@
           <summary>Contact</summary>
           <p>
             <a href="mailto:noraransi10@gmail.com">noraransi10@gmail.com</a>
-            · <a href="https://www.linkedin.com/in/noraransi/">LinkedIn
+            · <a href="https://www.linkedin.com/in/noraransi/">LinkedIn</a>
+          </p>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const storageKey = "theme"; // "light" | "dark"
+        const root = document.documentElement;
+
+        function currentTheme() {
+          return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        }
+
+        function updateIcon(theme) {
+          const img = document.getElementById("theme-icon");
+          if (!img) return;
+          if (theme === "dark") {
+            img.src = "moon.png";
+            img.alt = "Moon icon";
+          } else {
+            img.src = "sun.png";
+            img.alt = "Sun icon";
+          }
+        }
+
+        function setTheme(theme) {
+          theme = theme === "dark" ? "dark" : "light";
+
+          // Avoid flashes: disable transitions for a tick
+          const style = document.createElement("style");
+          style.textContent = "* { transition: none !important; }";
+          document.head.appendChild(style);
+
+          if (theme === "dark") {
+            root.setAttribute("data-theme", "dark");
+          } else {
+            root.removeAttribute("data-theme");
+          }
+
+          try { localStorage.setItem(storageKey, theme); } catch {}
+
+          const btn = document.getElementById("theme-toggle");
+          if (btn) {
+            btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+            btn.title = theme === "dark" ? "Light mode" : "Dark mode";
+          }
+          updateIcon(theme);
+
+          // Force reflow then remove the override
+          void document.body.offsetHeight;
+          requestAnimationFrame(() => {
+            if (style.parentNode) style.parentNode.removeChild(style);
+          });
+        }
+
+        // Initial theme (persisted or system)
+        const stored = (() => {
+          try { return localStorage.getItem(storageKey); } catch { return null; }
+        })();
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const initial = stored || (prefersDark ? "dark" : "light");
+        setTheme(initial);
+
+        // Click to toggle
+        function ready(fn) {
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", fn, { once: true });
+          } else {
+            fn();
+          }
+        }
+
+        ready(() => {
+          const btn = document.getElementById("theme-toggle");
+          if (!btn) return;
+          btn.addEventListener("click", () => {
+            const next = currentTheme() === "dark" ? "light" : "dark";
+            setTheme(next);
+          });
+        });
+
+        // Follow system if user hasn't chosen
+        if (!stored && window.matchMedia) {
+          const mq = window.matchMedia("(prefers-color-scheme: dark)");
+          const onChange = e => setTheme(e.matches ? "dark" : "light");
+          if (mq.addEventListener) mq.addEventListener("change", onChange);
+          else if (mq.addListener) mq.addListener(onChange);
+        }
+      })();
+    </script>
+  </body>
+</html>
