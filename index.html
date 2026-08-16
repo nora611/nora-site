@@ -1,14 +1,16 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Nora R.</title>
+    
+    <!-- Added Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css" />
-    <link rel="preload" as="image" href="moon.png" />
-    <link rel="preload" as="image" href="sun.png" />
-    <link rel="preload" as="image" href="avatar.JPG" fetchpriority="high" />
   </head>
 
   <body>
@@ -18,23 +20,29 @@
           id="theme-toggle"
           class="theme-toggle"
           type="button"
-          aria-label="Switch to dark mode"
-          title="Switch to dark mode"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
         >
-          <img id="theme-icon" src="moon.png" alt="Moon icon" width="20" height="20" decoding="async" />
+          <!-- SVG Moon Icon -->
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <!-- SVG Sun Icon -->
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
         </button>
       </header>
 
       <section class="hero">
-        <img
-          src="avatar.JPG"
-          alt="Photo of Nora"
-          class="site-avatar"
-          width="192"
-          height="192"
-          decoding="async"
-          fetchpriority="high"
-        />
         <h1 class="name">Nora Ransibrahmanakul</h1>
         <p class="subtitle">Hello!</p>
       </section>
@@ -104,23 +112,11 @@
 
     <script>
       (function () {
-        const storageKey = "theme"; // "light" | "dark"
+        const storageKey = "theme"; 
         const root = document.documentElement;
 
         function currentTheme() {
           return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
-        }
-
-        function updateIcon(theme) {
-          const img = document.getElementById("theme-icon");
-          if (!img) return;
-          if (theme === "dark") {
-          img.src = "sun.png";
-          img.alt = "Sun icon";
-          } else {
-          img.src = "moon.png";
-          img.alt = "Moon icon";
-          }
         }
 
         function setTheme(theme) {
@@ -144,7 +140,6 @@
             btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
             btn.title = theme === "dark" ? "Light mode" : "Dark mode";
           }
-          updateIcon(theme);
 
           // Force reflow then remove the override
           void document.body.offsetHeight;
@@ -153,7 +148,6 @@
           });
         }
 
-        // Initial theme (persisted or system)
         const stored = (() => {
           try { return localStorage.getItem(storageKey); } catch { return null; }
         })();
@@ -161,7 +155,6 @@
         const initial = stored || (prefersDark ? "dark" : "light");
         setTheme(initial);
 
-        // Click to toggle
         function ready(fn) {
           if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", fn, { once: true });
@@ -179,7 +172,6 @@
           });
         });
 
-        // Follow system if user hasn't chosen
         if (!stored && window.matchMedia) {
           const mq = window.matchMedia("(prefers-color-scheme: dark)");
           const onChange = e => setTheme(e.matches ? "dark" : "light");
