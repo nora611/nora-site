@@ -1,11 +1,9 @@
 :root {
   --bg: #ffffff;
-  --text: #0a0a0a;
-  --subtext: #555;
+  --text: #111111;
+  --subtext: #555555;
   --link: #1a73e8;
-  --border: #e6e6e6;
-  --card: #fafafa;
-  --shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+  --border: #eaeaea;
 }
 
 :root[data-theme="dark"] {
@@ -14,8 +12,6 @@
   --subtext: #a8a8a8;
   --link: #8ab4f8;
   --border: #26282b;
-  --card: #121315;
-  --shadow: 0 1px 2px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; }
@@ -24,114 +20,116 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  /* Updated to Inter */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .wrap {
-  max-width: 720px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 24px 16px 64px;
+  padding: 24px 24px 64px;
 }
 
-/* Header: right-aligned toggle like Anna's site */
+/* Header: simple top bar, no borders */
 .header {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  position: sticky;
-  top: 0;
-  background: color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter: saturate(1.2) blur(4px);
-  border-bottom: 1px solid var(--border);
-  height: 54px;
-  padding: 0 8px;
-  z-index: 10;
+  padding: 16px 0;
 }
 
-/* Toggle button using sun/moon JPGs */
+/* Toggle button using inline SVGs */
 .theme-toggle {
   appearance: none;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
+  background: transparent;
+  border: none;
+  color: var(--subtext);
   border-radius: 999px;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
+  transition: color 150ms ease, transform 100ms ease;
 }
 
-.theme-toggle img {
-  display: block;
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+.theme-toggle:hover { 
+  color: var(--text); 
 }
 
-.theme-toggle:hover { border-color: color-mix(in oklab, var(--border) 60%, var(--text)); }
-.theme-toggle:active { transform: scale(0.98); }
+.theme-toggle:active { 
+  transform: scale(0.95); 
+}
 
-/* Hero: image above name */
+/* Handle SVG swapping purely through CSS */
+.icon-sun { display: none; }
+.icon-moon { display: block; }
+
+[data-theme="dark"] .icon-sun { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+
+/* Hero */
 .hero {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  padding: 28px 0 8px;
-}
-
-.site-avatar {
-  width: 192px;
-  height: 192px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  background: var(--card);
+  margin-bottom: 40px;
 }
 
 .name {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 8px 0 0;
-  text-align: center;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  margin: 2px 0 0;
+  margin: 8px 0 0;
   color: var(--subtext);
-  text-align: center;
+  font-size: 1.1rem;
 }
 
-/* Content blocks */
+/* Content blocks - Cleaned up to remove boxes */
 .block {
-  margin: 16px 0;
-  padding: 12px 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
+  margin: 24px 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.block:last-child {
+  border-bottom: none;
 }
 
 details > summary {
   cursor: pointer;
   font-weight: 600;
-  list-style: none;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--text);
 }
-details > summary::-webkit-details-marker { display: none; }
 
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
+details > summary:hover {
+  color: var(--link);
+}
+
+details p {
+  margin: 8px 0;
+  color: var(--subtext);
+}
+
+a { 
+  color: var(--link); 
+  text-decoration: none; 
+  transition: color 0.15s ease;
+}
+
+a:hover { 
+  text-decoration: underline; 
+}
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .theme-toggle,
-  .site-avatar { transition: none; }
+  .theme-toggle { transition: none; }
 }
